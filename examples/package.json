@@ -1,0 +1,22 @@
+{
+  "name": "vue-jsonapi-examples",
+  "version": "0.0.1",
+  "description": "Usage examples for Vue JSON:API integration",
+  "main": "index.js",
+  "author": "Artur Rosa <rossinek@gmail.com> (arturrosa.pl)",
+  "license": "MIT",
+  "scripts": {
+    "example": "concurrently --kill-others \"poi -s $EXAMPLE/index.js --no-clear-console\" \"nodemon --watch $EXAMPLE $EXAMPLE/server.js $EXAMPLE/server.js\"",
+    "example:nesting": "EXAMPLE=nesting yarn example"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "concurrently": "^5.0.0",
+    "json-server": "^0.15.1",
+    "nodemon": "^2.0.1",
+    "poi": "^12.7.3",
+    "vue": "^2.6.10",
+    "vue-jsonapi": "file:../",
+    "vue-template-compiler": "^2.6.10"
+  }
+}
