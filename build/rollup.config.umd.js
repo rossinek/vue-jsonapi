@@ -8,6 +8,7 @@ const config = Object.assign({}, base, {
       vue: 'Vue',
     },
     name: 'vue-jsonapi',
+    exports: 'named',
   },
 })
 

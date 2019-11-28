@@ -11,7 +11,7 @@
     "build:es": "rollup --config build/rollup.config.es.js",
     "build:umd": "rollup --config build/rollup.config.umd.js",
     "prepublishOnly": "yarn test && yarn build",
-    "dev": "nodemon --exec 'yarn build:es && yarn build:umd' --watch src --watch lib",
+    "dev": "nodemon --exec 'yarn build:es && yarn build:umd' --watch src --watch build",
     "test": "yarn build && yarn test:eslint",
     "test:eslint": "eslint --ext .js,.vue '{src,build}/**/*.js' 'examples/**/*.{js,vue}'"
   },
@@ -35,6 +35,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.0.1",
+    "nodemon": "^2.0.1",
     "rollup": "^1.27.5",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
