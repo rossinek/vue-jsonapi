@@ -1,5 +1,4 @@
-const server = require('../server')
-const { createRecord } = require('../api')
+const { createRecord } = require('./utils')
 
 const authors = [
   {
@@ -25,9 +24,7 @@ const categories = [
   { id: '3', name: 'romance' },
 ]
 
-const db = {
+module.exports = {
   authors: authors.map(data => createRecord('author', data)),
   categories: categories.map(data => createRecord('category', data)),
 }
-
-server.run({ db })

@@ -1,17 +1,24 @@
-// server.js
-module.exports.run = ({ db }) => {
-  const jsonServer = require('json-server')
-  const server = jsonServer.create()
-  const router = jsonServer.router(db)
-  const middlewares = jsonServer.defaults()
+const fs = require('fs')
+const path = require('path')
+const express = require('express')
+const rewrite = require('express-urlrewrite')
+const app = express()
 
-  router.render = (req, res) => {
-    res.jsonp({ data: res.locals.data })
+const distPath = path.join(__dirname, 'dist')
+
+app.use(express.static(distPath))
+
+app.get('/.server-health', (req, res) => {
+  res.status(200).send('Hello World!')
+})
+
+fs.readdirSync(distPath).forEach(namespace => {
+  if (fs.statSync(path.join(distPath, namespace)).isDirectory()) {
+    app.use(rewrite('/' + namespace + '/*', '/' + namespace + '/index.html'))
   }
+})
 
-  server.use(middlewares)
-  server.use(router)
-  server.listen(3000, () => {
-    console.log('JSON Server is running on port 3000')
-  })
-}
+const port = process.env.PORT || 4000
+module.exports = app.listen(port, () => {
+  console.log(`Server listening on http://localhost:${port}, Ctrl+C to stop`)
+})

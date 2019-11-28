@@ -4,6 +4,7 @@
       <li
         v-for="author in authors"
         :key="author.id"
+        data-spec="author"
       >
         {{ author.name }}
         <ul>

@@ -7902,8 +7902,9 @@ vue-hot-reload-api@^2.3.0:
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"
   integrity sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==
 
-"vue-jsonapi@file:..":
-  version "0.0.1"
+"vue-jsonapi@link:..":
+  version "0.0.0"
+  uid ""
 
 vue-loader@^15.4.2:
   version "15.7.2"
