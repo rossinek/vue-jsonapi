@@ -1,5 +1,7 @@
 import Vue from 'vue'
 
+export const asTruthyArray = (obj) => (Array.isArray(obj) ? obj : [obj]).filter(Boolean)
+
 export const pick = (input = {}, keys = []) => keys.reduce((output, key) => {
   output[key] = input[key]
   return output

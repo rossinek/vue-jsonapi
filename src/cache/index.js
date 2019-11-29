@@ -1,13 +1,11 @@
 import Vue from 'vue'
-import { assignPropertyDescriptors, reactiveEnsurePath } from '../utils'
+import { assignPropertyDescriptors, asTruthyArray, reactiveEnsurePath } from '../utils'
 import { normalize } from './normalize'
 
 const defaultConfig = {
   getRequestId: ({ method, url }) => `${method}:${url}`,
   getRecordId: ({ type, id }) => `${type}:${id}`,
 }
-
-const asTruthyArray = (obj) => (Array.isArray(obj) ? obj : [obj]).filter(Boolean)
 
 class Cache {
   constructor (config = {}) {

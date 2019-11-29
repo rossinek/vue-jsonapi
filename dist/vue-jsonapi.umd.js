@@ -77,6 +77,9 @@
     return target;
   }
 
+  var asTruthyArray = function asTruthyArray(obj) {
+    return (Array.isArray(obj) ? obj : [obj]).filter(Boolean);
+  };
   var pick = function pick() {
     var input = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var keys = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
@@ -443,10 +446,6 @@
           id = _ref2.id;
       return "".concat(type, ":").concat(id);
     }
-  };
-
-  var asTruthyArray = function asTruthyArray(obj) {
-    return (Array.isArray(obj) ? obj : [obj]).filter(Boolean);
   };
 
   var Cache =

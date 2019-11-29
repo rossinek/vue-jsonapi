@@ -14,9 +14,10 @@
     "prepublishOnly": "yarn test && yarn build",
     "dev": "nodemon --exec 'yarn build:es && yarn build:umd' --watch src --watch build",
     "dev:examples": "cd examples && yarn dev",
-    "test": "yarn build && yarn lint && yarn test:e2e",
+    "test": "yarn build && yarn lint && yarn test:unit && yarn test:e2e",
     "test:e2e": "start-server-and-test serve:examples http://localhost:4000/.server-health test:e2e:cypress",
     "test:e2e:cypress": "yarn cypress run",
+    "test:unit": "yarn jest",
     "lint": "eslint --ext .js,.vue '{src,build}/**/*.js' 'examples/**/*.{js,vue}'"
   },
   "author": "Artur Rosa <rossinek@gmail.com> (arturrosa.pl)",
@@ -30,17 +31,22 @@
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
+    "@babel/plugin-transform-modules-commonjs": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
+    "@types/jest": "^24.0.23",
     "babel-eslint": "^10.0.3",
+    "babel-jest": "^24.9.0",
     "cypress": "^3.7.0",
     "eslint": "^6.7.1",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-cypress": "^2.7.0",
     "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^23.0.5",
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.0.1",
+    "jest": "^24.9.0",
     "nodemon": "^2.0.1",
     "rollup": "^1.27.5",
     "rollup-plugin-babel": "^4.3.3",
@@ -49,6 +55,7 @@
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-uglify": "^6.0.3",
     "start-server-and-test": "^1.10.6",
-    "uglify-es": "^3.3.9"
+    "uglify-es": "^3.3.9",
+    "vue": "^2.6.10"
   }
 }
