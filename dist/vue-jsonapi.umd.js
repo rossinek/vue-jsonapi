@@ -146,6 +146,8 @@
           enumerable: true,
           configurable: true
         });
+      } else {
+        model[relation] = null;
       }
     });
     return model;

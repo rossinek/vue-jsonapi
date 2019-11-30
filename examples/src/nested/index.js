@@ -8,6 +8,8 @@ const cache = new Cache()
 
 Vue.use(Jsonapi, { client, cache })
 
+window.$jsonapi = new Jsonapi({ client, cache })
+
 // eslint-disable-next-line no-new
 new Vue({
   el: '#app',
