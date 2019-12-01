@@ -1,0 +1,80 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      # - image: circleci/node:10.15
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+      - image: cypress/base:10.15.3
+        environment:
+          ## this enables colors in the output
+          TERM: xterm
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Install packages - plugin
+      - restore_cache:
+          keys:
+            - v1-dependencies-plugin-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-plugin-
+      - run:
+          name: "Install packages - plugin"
+          working_directory: ~/repo
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          paths:
+            - node_modules
+            - ~/.cache
+          key: v1-dependencies-plugin-{{ checksum "yarn.lock" }}
+
+      # Install packages - examples
+      - restore_cache:
+          keys:
+            - v1-dependencies-examples-{{ checksum "examples/yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-examples-
+      - run:
+          name: "Install packages - examples"
+          working_directory: ~/repo/examples
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          paths:
+            - examples/node_modules
+          key: v1-dependencies-examples-{{ checksum "examples/yarn.lock" }}
+
+      # Run linter
+      - run:
+          name: "Run linter"
+          working_directory: ~/repo
+          command: yarn lint
+
+      # Run build
+      - run:
+          name: "Run build"
+          working_directory: ~/repo
+          command: yarn build
+
+      # Run e2e tests
+      - run:
+          name: "Run e2e tests"
+          working_directory: ~/repo
+          command: yarn test:e2e
+
+      # Run unit tests
+      - run:
+          name: "Run unit tests"
+          working_directory: ~/repo
+          command: yarn test:unit
