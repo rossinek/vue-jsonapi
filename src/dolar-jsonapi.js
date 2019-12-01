@@ -1,8 +1,9 @@
+import { Globals } from './params'
 import { metadata } from './cache/normalize'
 import SmartQuery from './smart-query'
 
 class DolarJsonapi {
-  constructor ({ cache, client }) {
+  constructor ({ cache = Globals.defaultCache, client = Globals.defaultClient } = {}) {
     this.cache = cache
     this.client = client
     this.queries = {}

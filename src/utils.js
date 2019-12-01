@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import { Globals } from './params'
 
 export const asTruthyArray = (obj) => (Array.isArray(obj) ? obj : [obj]).filter(Boolean)
 
@@ -27,7 +27,7 @@ export const assignPropertyDescriptors = (target, ...sources) => {
 export const reactiveEnsurePath = (target, path, empty = {}) => {
   path.reduce((current, prop, index) => {
     if (!current[prop]) {
-      Vue.set(current, prop, index < path.length - 1 ? {} : empty)
+      Globals.Vue.set(current, prop, index < path.length - 1 ? {} : empty)
     }
     return current[prop]
   }, target)
@@ -36,7 +36,7 @@ export const reactiveEnsurePath = (target, path, empty = {}) => {
 export const reactiveAssign = (target, ...sources) => {
   sources.forEach(source => {
     Object.keys(source).forEach(prop => {
-      Vue.set(target, prop, source[prop])
+      Globals.Vue.set(target, prop, source[prop])
     })
   })
 }

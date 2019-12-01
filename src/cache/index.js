@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import { Globals } from '../params'
 import { assignPropertyDescriptors, asTruthyArray, reactiveEnsurePath } from '../utils'
 import { normalize } from './normalize'
 
@@ -12,7 +12,7 @@ class Cache {
     this.options = { ...defaultConfig, ...config }
     this.actionIndex = 0
 
-    this.state = Vue.observable({
+    this.state = Globals.Vue.observable({
       records: {},
       requests: {},
     })

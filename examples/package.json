@@ -6,7 +6,7 @@
   "author": "Artur Rosa <rossinek@gmail.com> (arturrosa.pl)",
   "license": "MIT",
   "scripts": {
-    "build": "node build.js",
+    "build": "BUILD=true node build.js",
     "serve": "concurrently --kill-others \"nodemon --watch server.js server.js\" \"nodemon --watch api api/index.js\"",
     "dev": "concurrently --kill-others \"poi -s --no-clear-console\" \"nodemon --watch api api/index.js\""
   },

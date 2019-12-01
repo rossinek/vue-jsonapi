@@ -1,14 +1,13 @@
 import Vue from 'vue'
-import Jsonapi, { Cache } from 'vue-jsonapi'
+import Jsonapi from 'vue-jsonapi'
 import axios from 'axios'
 import App from './App.vue'
 
 const client = axios.create({ baseURL: 'http://localhost:3000/' })
-const cache = new Cache()
 
-Vue.use(Jsonapi, { client, cache })
+Vue.use(Jsonapi, { client })
 
-window.$jsonapi = new Jsonapi({ client, cache })
+window.$jsonapi = new Jsonapi()
 
 // eslint-disable-next-line no-new
 new Vue({

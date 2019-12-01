@@ -1,6 +1,6 @@
-import Cache from '../../src/cache/index'
-import { SIMPLE_RECORD } from './fixtures/records'
-import { SIMPLE_REQUEST } from './fixtures/requests'
+import Cache from '../../../src/cache/index'
+import { SIMPLE_RECORD } from '../fixtures/records'
+import { SIMPLE_REQUEST } from '../fixtures/requests'
 
 describe('Cache', () => {
   it('has default implementation of `getRecordId` method', () => {

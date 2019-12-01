@@ -1,10 +1,8 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('vue')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'vue'], factory) :
-  (global = global || self, factory(global['vue-jsonapi'] = {}, global.Vue));
-}(this, (function (exports, Vue) { 'use strict';
-
-  Vue = Vue && Vue.hasOwnProperty('default') ? Vue['default'] : Vue;
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+  (global = global || self, factory(global['vue-jsonapi'] = {}));
+}(this, (function (exports) { 'use strict';
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -77,6 +75,8 @@
     return target;
   }
 
+  var Globals = {};
+
   var asTruthyArray = function asTruthyArray(obj) {
     return (Array.isArray(obj) ? obj : [obj]).filter(Boolean);
   };
@@ -118,7 +118,7 @@
     var empty = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     path.reduce(function (current, prop, index) {
       if (!current[prop]) {
-        Vue.set(current, prop, index < path.length - 1 ? {} : empty);
+        Globals.Vue.set(current, prop, index < path.length - 1 ? {} : empty);
       }
 
       return current[prop];
@@ -187,7 +187,7 @@
       this.rawOptions = _objectSpread2({}, defaultOptions, {}, options);
       this.vm = vm;
       this.watchers = [];
-      this.observable = Vue.observable({
+      this.observable = Globals.Vue.observable({
         info: {}
       });
       this.init();
@@ -371,9 +371,12 @@
   var DolarJsonapi =
   /*#__PURE__*/
   function () {
-    function DolarJsonapi(_ref) {
-      var cache = _ref.cache,
-          client = _ref.client;
+    function DolarJsonapi() {
+      var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          _ref$cache = _ref.cache,
+          cache = _ref$cache === void 0 ? Globals.defaultCache : _ref$cache,
+          _ref$client = _ref.client,
+          client = _ref$client === void 0 ? Globals.defaultClient : _ref$client;
 
       _classCallCheck(this, DolarJsonapi);
 
@@ -460,7 +463,7 @@
 
       this.options = _objectSpread2({}, defaultConfig, {}, config);
       this.actionIndex = 0;
-      this.state = Vue.observable({
+      this.state = Globals.Vue.observable({
         records: {},
         requests: {}
       });
@@ -616,20 +619,21 @@
   var plugin = DolarJsonapi;
 
   function install(Vue, _ref) {
-    var cache = _ref.cache,
+    var _ref$Cache = _ref.Cache,
+        Cache$1 = _ref$Cache === void 0 ? Cache : _ref$Cache,
         client = _ref.client;
     if (install.installed) return;
-    install.installed = true; // Options merging
+    install.installed = true;
+    Globals.Vue = Vue;
+    Globals.defaultCache = new Cache$1();
+    Globals.defaultClient = client; // Options merging
 
     Vue.config.optionMergeStrategies.jsonapi = Vue.config.optionMergeStrategies.computed; // Lazy creation
 
     Object.defineProperty(Vue.prototype, '$jsonapi', {
       get: function get() {
         if (!this.$_jsonapi) {
-          this.$_jsonapi = new DolarJsonapi({
-            cache: cache,
-            client: client
-          });
+          this.$_jsonapi = new DolarJsonapi();
         }
 
         return this.$_jsonapi;

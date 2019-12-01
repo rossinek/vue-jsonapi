@@ -1,5 +1,5 @@
-import { normalize } from '../../src/cache/normalize'
-import { RECORD_WITH_RELATIONSHIPS, SIMPLE_RECORD } from './fixtures/records'
+import { normalize } from '../../../src/cache/normalize'
+import { RECORD_WITH_RELATIONSHIPS, SIMPLE_RECORD } from '../fixtures/records'
 
 describe('#normalize', () => {
   describe('when record has no relationships', () => {

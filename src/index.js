@@ -1,10 +1,16 @@
 import DolarJsonapi from './dolar-jsonapi'
+import { Globals } from './params'
+import DefaultCache from './cache'
 
 const plugin = DolarJsonapi
 
-function install (Vue, { cache, client }) {
+function install (Vue, { Cache = DefaultCache, client }) {
   if (install.installed) return
   install.installed = true
+
+  Globals.Vue = Vue
+  Globals.defaultCache = new Cache()
+  Globals.defaultClient = client
 
   // Options merging
   Vue.config.optionMergeStrategies.jsonapi = Vue.config.optionMergeStrategies.computed
@@ -13,7 +19,7 @@ function install (Vue, { cache, client }) {
   Object.defineProperty(Vue.prototype, '$jsonapi', {
     get () {
       if (!this.$_jsonapi) {
-        this.$_jsonapi = new DolarJsonapi({ cache, client })
+        this.$_jsonapi = new DolarJsonapi()
       }
       return this.$_jsonapi
     },

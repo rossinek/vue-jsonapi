@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import { Globals } from './params'
 import { isEqual, pick } from './utils'
 
 export const POLICY_NETWORK_ONLY = 'network-only'
@@ -24,7 +24,7 @@ class SmartQuery {
     this.vm = vm
     this.watchers = []
 
-    this.observable = Vue.observable({
+    this.observable = Globals.Vue.observable({
       info: {},
     })
 
