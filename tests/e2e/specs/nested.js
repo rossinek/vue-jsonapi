@@ -1,6 +1,6 @@
 describe('test', () => {
-  it('shows list of authors', () => {
+  it('shows list of projects', () => {
     cy.visit('/nested')
-    cy.get('[data-spec="author"]').should('have.length', 4)
+    cy.get('[data-spec="project"]').should('have.length', 3)
   })
 })

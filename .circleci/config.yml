@@ -55,11 +55,26 @@ jobs:
             - examples/node_modules
           key: v1-dependencies-examples-{{ checksum "examples/yarn.lock" }}
 
+      # Install packages - tests
+      - restore_cache:
+          keys:
+            - v1-dependencies-tests-{{ checksum "tests/yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-tests-
+      - run:
+          name: "Install packages - tests"
+          working_directory: ~/repo/tests
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          paths:
+            - tests/node_modules
+          key: v1-dependencies-tests-{{ checksum "tests/yarn.lock" }}
+
       # Run linter
       - run:
           name: "Run linter"
           working_directory: ~/repo
-          command: yarn lint
+          command: yarn test:lint
 
       # Run build
       - run:

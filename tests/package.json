@@ -1,0 +1,26 @@
+{
+  "name": "vue-jsonapi-tests",
+  "version": "0.0.1",
+  "description": "Tests for Vue JSON:API integration",
+  "main": "index.js",
+  "author": "Artur Rosa <rossinek@gmail.com> (arturrosa.pl)",
+  "license": "MIT",
+  "scripts": {
+    "serve:examples": "cd ../examples && yarn serve",
+    "e2e": "start-server-and-test serve:examples http://localhost:4000/.server-health e2e:cypress",
+    "e2e:cypress": "yarn cypress run",
+    "unit": "yarn jest"
+  },
+  "dependencies": {
+    "cypress": "^3.7.0",
+    "jest": "^24.9.0",
+    "vue": "^2.6.10",
+    "vue-jsonapi": "link:.."
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.7.4",
+    "@types/jest": "^24.0.23",
+    "babel-jest": "^24.9.0",
+    "start-server-and-test": "^1.10.6"
+  }
+}

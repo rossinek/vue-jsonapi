@@ -2,17 +2,17 @@
   <div>
     <ul>
       <li
-        v-for="author in authors"
-        :key="author.id"
-        data-spec="author"
+        v-for="project in projects"
+        :key="project.id"
+        data-spec="project"
       >
-        {{ author.name }}
+        {{ project.name }}
         <ul>
           <li
-            v-for="category in (author.categories || []).filter(Boolean)"
-            :key="category.id"
+            v-for="tag in (project.tags || []).filter(Boolean)"
+            :key="tag.id"
           >
-            {{ category.name }}
+            {{ tag.name }}
           </li>
         </ul>
       </li>
@@ -24,23 +24,23 @@
 export default {
   data () {
     return {
-      authors: [],
-      categories: [],
+      projects: [],
+      tags: [],
     }
   },
   jsonapi: {
-    authors: {
+    projects: {
       fetchPolicy: 'cache-first',
       config: {
         method: 'get',
-        url: '/authors',
+        url: '/projects',
       },
     },
-    categories: {
+    tags: {
       fetchPolicy: 'cache-first',
       config: {
         method: 'get',
-        url: '/categories',
+        url: '/tags',
       },
     },
   },

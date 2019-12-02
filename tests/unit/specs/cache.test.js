@@ -1,4 +1,4 @@
-import Cache from '../../../src/cache/index'
+import Cache from '../../../src/cache'
 import { SIMPLE_RECORD } from '../fixtures/records'
 import { SIMPLE_REQUEST } from '../fixtures/requests'
 

@@ -7,14 +7,14 @@
   "license": "MIT",
   "scripts": {
     "build": "BUILD=true node build.js",
-    "serve": "concurrently --kill-others \"nodemon --watch server.js server.js\" \"nodemon --watch api api/index.js\"",
+    "serve": "yarn build && concurrently --kill-others \"nodemon --watch server.js server.js\" \"nodemon --watch api api/index.js\"",
     "dev": "concurrently --kill-others \"poi -s --no-clear-console\" \"nodemon --watch api api/index.js\""
   },
   "dependencies": {
     "axios": "^0.19.0",
     "concurrently": "^5.0.0",
     "express": "^4.17.1",
-    "json-server": "^0.15.1",
+    "express-urlrewrite": "^1.2.0",
     "nodemon": "^2.0.1",
     "poi": "^12.7.3",
     "vue": "^2.6.10",

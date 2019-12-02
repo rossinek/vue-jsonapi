@@ -1,17 +1,27 @@
 
-const jsonServer = require('json-server')
+const express = require('express')
 const db = require('./db')
 
-const server = jsonServer.create()
-const router = jsonServer.router(db)
-const middlewares = jsonServer.defaults()
+const app = express()
+app.use(express.json())
 
-router.render = (req, res) => {
-  res.jsonp({ data: res.locals.data })
+const cors = (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+  res.header('Access-Control-Allow-Headers', 'Content-Type')
+  next()
 }
 
-server.use(middlewares)
-server.use(router)
-server.listen(3000, () => {
+app.use(cors)
+
+app.get('/projects', (req, res) => {
+  res.json({ data: db.projects })
+})
+
+app.get('/tags', (req, res) => {
+  res.json({ data: db.tags })
+})
+
+app.listen(3000, () => {
   console.log('JSON Server is running on port 3000')
 })
