@@ -15,12 +15,12 @@ const entries = fs.readdirSync(inputPath).reduce((entries, namespace) => {
   return entries
 }, [])
 
-entries.forEach(({ namespace, entry, output }) => {
-  console.log('Cleaning dist directory...')
-  execSync(`rm -rf ${distPath}`, { stdio: 'inherit' })
-  execSync(`mkdir ${distPath}`, { stdio: 'inherit' })
-  execSync(`cp ${path.join(__dirname, 'index.html')} ${distPath}`, { stdio: 'inherit' })
+console.log('Cleaning dist directory...')
+execSync(`rm -rf ${distPath}`, { stdio: 'inherit' })
+execSync(`mkdir ${distPath}`, { stdio: 'inherit' })
+execSync(`cp ${path.join(__dirname, 'index.html')} ${distPath}`, { stdio: 'inherit' })
 
+entries.forEach(({ namespace, entry, output }) => {
   console.log(`Building example "${namespace}"...`)
   execSync(`yarn poi ${entry} --no-clear-console --out-dir ${output} --public-url /${namespace}/`, {
     cwd: __dirname,

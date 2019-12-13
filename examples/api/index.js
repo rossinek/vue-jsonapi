@@ -22,6 +22,22 @@ app.get('/tags', (req, res) => {
   res.json({ data: db.tags })
 })
 
+app.get('/tasks', (req, res) => {
+  res.json({ data: db.tasks })
+})
+
+app.get('/tasks/:taskId', (req, res) => {
+  res.json({ data: db.tasks.find(t => t.id === req.params.taskId) })
+})
+
+app.get('/tasksUpdated', (req, res) => {
+  res.json({ data: db.tasksUpdated })
+})
+
+app.get('/tasksUpdated/:taskId', (req, res) => {
+  res.json({ data: db.tasksUpdated.find(t => t.id === req.params.taskId) })
+})
+
 app.listen(3000, () => {
   console.log('JSON Server is running on port 3000')
 })

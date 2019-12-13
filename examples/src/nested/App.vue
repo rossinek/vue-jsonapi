@@ -1,31 +1,32 @@
 <template>
   <div>
-    <ul>
-      <li
-        v-for="project in projects"
-        :key="project.id"
-        data-spec="project"
+    <project-list
+      :projects="projects"
+    />
+    <p>
+      <button
+        data-spec="get-updated-task-button"
+        @click="getUpdatedTask"
       >
-        {{ project.name }}
-        <ul>
-          <li
-            v-for="tag in (project.tags || []).filter(Boolean)"
-            :key="tag.id"
-          >
-            {{ tag.name }}
-          </li>
-        </ul>
-      </li>
-    </ul>
+        get updated "task #1"
+      </button>
+    </p>
   </div>
 </template>
 
 <script>
+import ProjectList from '../components/ProjectList.vue'
+
 export default {
+  components: {
+    ProjectList,
+  },
   data () {
     return {
       projects: [],
       tags: [],
+      tasks: [],
+      updatedTask: null,
     }
   },
   jsonapi: {
@@ -43,9 +44,24 @@ export default {
         url: '/tags',
       },
     },
+    tasks: {
+      fetchPolicy: 'cache-first',
+      config: {
+        method: 'get',
+        url: '/tasks',
+      },
+    },
+  },
+  methods: {
+    async getUpdatedTask () {
+      const { data } = await this.$jsonapi.request({
+        config: {
+          method: 'get',
+          url: '/tasksUpdated/1',
+        },
+      })
+      this.updatedTask = data
+    },
   },
 }
 </script>
-
-<style>
-</style>

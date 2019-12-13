@@ -8,13 +8,40 @@ const projects = [
       tags: {
         data: [
           { type: 'tag', id: '2' },
-          { type: 'tag', id: '3' },
         ],
       },
     },
   },
-  { id: '2', name: 'Second project' },
-  { id: '3', name: 'Last project' },
+  {
+    id: '2',
+    name: 'Second project',
+    relationships: {
+      tags: {
+        data: [
+          { type: 'tag', id: '1' },
+          { type: 'tag', id: '3' },
+        ],
+      },
+      tasks: {
+        data: [
+          { type: 'task', id: '1' },
+          { type: 'task', id: '2' },
+        ],
+      },
+    },
+  },
+  {
+    id: '3',
+    name: 'Last project',
+    relationships: {
+      tasks: {
+        data: [
+          { type: 'task', id: '3' },
+          { type: 'task', id: '4' },
+        ],
+      },
+    },
+  },
 ]
 
 const tasks = [
@@ -31,13 +58,14 @@ const tasks = [
 ]
 
 const tags = [
-  { id: '1', name: 'home' },
-  { id: '2', name: 'office' },
-  { id: '3', name: 'morning' },
+  { id: '1', name: 'personal' },
+  { id: '2', name: 'work' },
+  { id: '3', name: 'programming' },
 ]
 
 module.exports = {
   projects: projects.map(data => createRecord('project', data)),
   tasks: tasks.map(data => createRecord('task', data)),
+  tasksUpdated: tasks.map(data => createRecord('task', { ...data, name: `${data.name} – UPDATED` })),
   tags: tags.map(data => createRecord('tag', data)),
 }

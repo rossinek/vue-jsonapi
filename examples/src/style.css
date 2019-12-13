@@ -1,0 +1,21 @@
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+button {
+  background: rgb(97, 129, 33);
+  color: white;
+  padding: 10px 20px;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background: rgb(90, 120, 30);
+}
