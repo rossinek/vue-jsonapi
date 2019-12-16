@@ -27,9 +27,9 @@ jobs:
       # Install packages - plugin
       - restore_cache:
           keys:
-            - v1-dependencies-plugin-{{ checksum "yarn.lock" }}
+            - v3-dependencies-plugin-{{ checksum "yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-plugin-
+            - v3-dependencies-plugin-
       - run:
           name: "Install packages - plugin"
           working_directory: ~/repo
@@ -37,15 +37,14 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-            - ~/.cache
-          key: v1-dependencies-plugin-{{ checksum "yarn.lock" }}
+          key: v3-dependencies-plugin-{{ checksum "yarn.lock" }}
 
       # Install packages - examples
       - restore_cache:
           keys:
-            - v1-dependencies-examples-{{ checksum "examples/yarn.lock" }}
+            - v3-dependencies-examples-{{ checksum "examples/yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-examples-
+            - v3-dependencies-examples-
       - run:
           name: "Install packages - examples"
           working_directory: ~/repo/examples
@@ -53,14 +52,14 @@ jobs:
       - save_cache:
           paths:
             - examples/node_modules
-          key: v1-dependencies-examples-{{ checksum "examples/yarn.lock" }}
+          key: v3-dependencies-examples-{{ checksum "examples/yarn.lock" }}
 
       # Install packages - tests
       - restore_cache:
           keys:
-            - v1-dependencies-tests-{{ checksum "tests/yarn.lock" }}
+            - v3-dependencies-tests-{{ checksum "tests/yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-tests-
+            - v3-dependencies-tests-
       - run:
           name: "Install packages - tests"
           working_directory: ~/repo/tests
@@ -68,7 +67,8 @@ jobs:
       - save_cache:
           paths:
             - tests/node_modules
-          key: v1-dependencies-tests-{{ checksum "tests/yarn.lock" }}
+            - /root/.cache/Cypress
+          key: v3-dependencies-tests-{{ checksum "tests/yarn.lock" }}
 
       # Run linter
       - run:
