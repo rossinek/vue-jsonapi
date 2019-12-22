@@ -23,6 +23,7 @@ class SmartQuery {
     this.rawOptions = { ...defaultOptions, ...options }
     this.vm = vm
     this.watchers = []
+    this.interval = null
 
     this.observable = Globals.Vue.observable({
       info: {},
@@ -65,18 +66,32 @@ class SmartQuery {
     return this.readCachedRequest()
   }
 
+  get hasMore () {
+    return !!(this.request.raw && this.request.raw.data.links && this.request.raw.data.links.next)
+  }
+
+  get pollInterval () {
+    return this.rawOptions.pollInterval
+  }
+
   init () {
     this.watchers.push(
       this.vm.$watch(this.computeOptions.bind(this), this.onComputeOptionsChange.bind(this)),
       this.vm.$watch(this.readCachedRequest.bind(this), this.onRequestDataChange.bind(this), { deep: true }),
     )
+    if (this.pollInterval) {
+      this.interval = setInterval(this.refetch.bind(this), this.pollInterval)
+    }
   }
 
   destroy () {
     this.watchers.forEach(unwatch => unwatch())
+    if (this.interval) {
+      clearInterval(this.interval)
+    }
   }
 
-  run (computedOptions = this.computeOptions()) {
+  async run (computedOptions = this.computeOptions()) {
     const { skip, config, fetchPolicy } = computedOptions
 
     if (skip) return
@@ -94,7 +109,10 @@ class SmartQuery {
       (fetchPolicy === POLICY_CACHE_FIRST && !cacheValue)
     ) {
       const noCache = fetchPolicy === POLICY_NO_CACHE
-      this.fetch({ config, noCache }, info)
+      const response = await this.fetch({ config, noCache }, info)
+      if (noCache) {
+        this.onRequestDataChange(response)
+      }
     }
   }
 
@@ -118,7 +136,16 @@ class SmartQuery {
 
   fetch (options, info = this.info) {
     info.status = STATUS_PENDING
-    const promise = this.$jsonapi.request(options)
+    return this.wrapRequest(this.$jsonapi.request(options), info)
+  }
+
+  fetchMore () {
+    return this.wrapRequest(this.$jsonapi.fetchMore(this.request))
+  }
+
+  wrapRequest (promise, info = this.info) {
+    info.status = STATUS_PENDING
+    promise
       .then(response => {
         info.status = STATUS_SUCCESS
         return response

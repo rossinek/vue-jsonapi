@@ -45,6 +45,20 @@ class Cache {
     return this.state.requests[requestId]
   }
 
+  appendRequestData (requestId, dataGetter, raw) {
+    const prevDataGetter = this.state.requests[requestId].data
+    this.state.requests[requestId] = Object.freeze({
+      ...this.state.requests[requestId],
+      timestamp: +new Date(),
+      raw,
+      data: () => [
+        ...prevDataGetter(),
+        ...dataGetter(),
+      ],
+    })
+    return this.state.requests[requestId]
+  }
+
   readRequest (requestId) {
     const request = this.state.requests[requestId]
     return request && {
@@ -55,6 +69,13 @@ class Cache {
 
   read (record) {
     return this.state.records[this.getRecordId(record)]
+  }
+
+  write (record, data) {
+    const recordId = this.getRecordId(record)
+    reactiveEnsurePath(this.state.records, [recordId], null)
+    const extendedNormalizedRec = assignPropertyDescriptors({}, this.state.records[recordId], data)
+    this.state.records[recordId] = Object.freeze(extendedNormalizedRec)
   }
 
   parseResponse (config, response) {
@@ -73,11 +94,7 @@ class Cache {
       const mutations = Array.from(records)
         .map(recordId => ctx => reactiveEnsurePath(ctx.state.records, [recordId], null))
         .concat(includedRecordsIds.map(recordId => ctx => reactiveEnsurePath(ctx.state.records, [recordId], {})))
-        .concat(includedRecords.map(rec => ctx => {
-          const recordId = this.getRecordId(rec)
-          const extendedNormalizedRec = assignPropertyDescriptors({}, ctx.state.records[recordId], normalize(ctx, rec))
-          ctx.state.records[recordId] = Object.freeze(extendedNormalizedRec)
-        }))
+        .concat(includedRecords.map(rec => ctx => ctx.write(rec, normalize(ctx, rec))))
 
       let getter = null
 
@@ -92,7 +109,8 @@ class Cache {
           if (getter) return getter()
           const state = { records: [] }
           const read = record => state.records[this.getRecordId(record)]
-          const temporaryContext = { state, read }
+          const write = (record, data) => { state.records[this.getRecordId(record)] = data }
+          const temporaryContext = { state, read, write }
           mutations.forEach(commit => commit(temporaryContext))
           getter = createGetter(temporaryContext)
           return getter()

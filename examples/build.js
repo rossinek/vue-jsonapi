@@ -22,7 +22,7 @@ execSync(`cp ${path.join(__dirname, 'index.html')} ${distPath}`, { stdio: 'inher
 
 entries.forEach(({ namespace, entry, output }) => {
   console.log(`Building example "${namespace}"...`)
-  execSync(`yarn poi ${entry} --no-clear-console --out-dir ${output} --public-url /${namespace}/`, {
+  execSync(`yarn poi ${entry} --no-clear-console --out-dir ${output} --public-url /${namespace}/ --prod`, {
     cwd: __dirname,
     stdio: 'inherit',
   })

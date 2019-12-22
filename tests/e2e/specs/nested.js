@@ -21,6 +21,13 @@ describe('nested', () => {
     cy.get('[data-spec="task"]').should('have.length', 4)
   })
 
+  it('loads next page of projects', () => {
+    cy.visit('/nested')
+    cy.get('[data-spec="project"]').should('have.length', 3)
+    cy.get('[data-spec="fetch-more-button"]').click()
+    cy.get('[data-spec="project"]').should('have.length', 4)
+  })
+
   it('updates task automatically in all places after updated task is fetched', () => {
     cy.visit('/nested')
     cy.get('[data-spec="task"]').contains('#1').should('have.text', 'task #1')

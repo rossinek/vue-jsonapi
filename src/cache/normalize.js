@@ -8,12 +8,13 @@ export const normalize = (ctx, record) => {
   }
   const relationships = record.relationships || {}
   Object.keys(relationships).forEach(relation => {
-    const data = relationships[relation].data
-    if (data) {
+    if (Object.hasOwnProperty.call(relationships[relation], 'data')) {
+      const data = relationships[relation].data
       Object.defineProperty(model, relation, {
         get () {
           if (Array.isArray(data)) return data.map(item => ctx.read(item))
-          return ctx.read(data)
+          else if (data) return ctx.read(data)
+          return null
         },
         enumerable: true,
         configurable: true,

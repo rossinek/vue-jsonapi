@@ -87,6 +87,8 @@ type QueryOptions = {
   update?: (data) => any,
   // called when there are errors
   error?: (error) => void,
+  // set refetching interval
+  pollInterval: number
 }
 ```
 

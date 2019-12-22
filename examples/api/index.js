@@ -14,8 +14,36 @@ const cors = (req, res, next) => {
 
 app.use(cors)
 
+app.use((req, res, next) => {
+  const delay = +req.query.delay
+  if (delay && delay > 0) setTimeout(next, delay)
+  else next()
+})
+
 app.get('/projects', (req, res) => {
-  res.json({ data: db.projects })
+  const page = Math.min(+req.query.page || 1)
+  switch (page) {
+    case 1:
+      res.json({
+        data: db.projects,
+        links: {
+          prev: null,
+          next: '/projects?page=2',
+        },
+      })
+      break
+    case 2:
+      res.json({
+        data: db.projects2,
+        links: {
+          prev: '/projects?page=1',
+          next: null,
+        },
+      })
+      break
+    default:
+      res.sendStatus(404)
+  }
 })
 
 app.get('/tags', (req, res) => {

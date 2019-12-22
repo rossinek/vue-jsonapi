@@ -17,8 +17,13 @@ class DolarJsonapi {
     Object.values(this.queries).forEach(sq => sq.destroy())
   }
 
-  request ({ config, noCache }) {
-    const cacheRequest = config.method === 'get'
+  get loading () {
+    return Object.keys(this.queries).some(key => this.queries[key].loading)
+  }
+
+  request ({ config, noCache, noRequestCache }) {
+    const cacheRequest = config.method === 'get' && !noRequestCache
+
     if (cacheRequest && !noCache) {
       this.cache.initRequest(config)
     }
@@ -44,6 +49,20 @@ class DolarJsonapi {
         },
       }
     })
+  }
+
+  async fetchMore (prevResponse) {
+    if (prevResponse.raw.data.links && prevResponse.raw.data.links.next) {
+      const response = await this.request({
+        config: {
+          method: 'get',
+          url: prevResponse.raw.data.links.next,
+        },
+        noRequestCache: true,
+      })
+      this.cache.appendRequestData(prevResponse.requestId, () => response.data, response.raw)
+      return response
+    }
   }
 }
 

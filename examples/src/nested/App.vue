@@ -3,6 +3,14 @@
     <project-list
       :projects="projects"
     />
+    <p v-if="hasMoreProjects">
+      <button
+        data-spec="fetch-more-button"
+        @click="fetchMoreProjects"
+      >
+        fetch more
+      </button>
+    </p>
     <p>
       <button
         data-spec="get-updated-task-button"
@@ -52,7 +60,15 @@ export default {
       },
     },
   },
+  computed: {
+    hasMoreProjects () {
+      return this.$jsonapi.queries.projects.hasMore
+    },
+  },
   methods: {
+    async fetchMoreProjects () {
+      return this.$jsonapi.queries.projects.fetchMore()
+    },
     async getUpdatedTask () {
       const { data } = await this.$jsonapi.request({
         config: {
