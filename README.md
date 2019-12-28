@@ -17,7 +17,7 @@ Many patterns and usage may seem familiar to you, as this solution is strongly i
     ```
 
 2. Install the plugin into Vue:
-    ```
+    ```js
     import Vue from 'vue'
     import Jsonapi from 'vue-jsonapi'
 
