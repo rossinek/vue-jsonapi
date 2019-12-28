@@ -7,21 +7,21 @@ Many patterns and usage may seem familiar to you, as this solution is strongly i
 ## Installation
 
 1. Install package:
-```
-npm install --save vue-jsonapi
-```
-or:
+    ```
+    npm install --save vue-jsonapi
+    ```
+    or:
 
-```
-yarn add vue-jsonapi
-```
+    ```
+    yarn add vue-jsonapi
+    ```
 
 2. Install the plugin into Vue:
-```
-import Vue from 'vue'
-import Jsonapi from 'vue-jsonapi'
+    ```
+    import Vue from 'vue'
+    import Jsonapi from 'vue-jsonapi'
 
-const client = axios.create()
+    const client = axios.create()
 
-Vue.use(Jsonapi, { client })
-```
+    Vue.use(Jsonapi, { client })
+    ```
