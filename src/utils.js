@@ -14,11 +14,20 @@ export const omit = (input = {}, keys = []) => Object.keys(input).reduce((output
 
 export const isEqual = (obj1, obj2) => JSON.stringify(obj1) === JSON.stringify(obj2)
 
+const isGetterDescriptor = descriptor => descriptor && Object.hasOwnProperty.call(descriptor, 'get')
+
+const isDef = v => v !== undefined || v !== null
+
 export const assignPropertyDescriptors = (target, ...sources) => {
   sources.forEach(source => {
-    Object.keys(source).forEach(prop => {
-      const descriptor = Object.getOwnPropertyDescriptor(source, prop)
-      Object.defineProperty(target, prop, { ...descriptor, configurable: true })
+    source && Object.keys(source).forEach(prop => {
+      const oldDescriptor = Object.getOwnPropertyDescriptor(target, prop)
+      const newDescriptor = Object.getOwnPropertyDescriptor(source, prop)
+      // prevent attribute to override relationship
+      // (override property only if empty value or it was direct value)
+      if (!isGetterDescriptor(oldDescriptor) || isGetterDescriptor(newDescriptor) || !isDef(newDescriptor.value)) {
+        Object.defineProperty(target, prop, { ...newDescriptor, configurable: true })
+      }
     })
   })
   return target
