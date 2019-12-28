@@ -24,6 +24,11 @@
     "vue",
     "jsonapi"
   ],
+  "homepage": "https://github.com/rossinek/vue-jsonapi#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rossinek/vue-jsonapi.git"
+  },
   "publishConfig": {
     "access": "public"
   },
