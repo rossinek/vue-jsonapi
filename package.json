@@ -1,6 +1,6 @@
 {
   "name": "vue-jsonapi",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Vue integration with JSON:API strongly inspired by vue-apollo",
   "main": "dist/vue-jsonapi.umd.js",
   "module": "dist/vue-jsonapi.esm.js",
