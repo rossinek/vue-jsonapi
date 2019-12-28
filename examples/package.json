@@ -16,7 +16,7 @@
     "express": "^4.17.1",
     "express-urlrewrite": "^1.2.0",
     "nodemon": "^2.0.1",
-    "poi": "^12.7.3",
+    "poi": "^12.7.5",
     "vue": "^2.6.10",
     "vue-jsonapi": "link:..",
     "vue-template-compiler": "^2.6.10"
