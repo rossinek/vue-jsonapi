@@ -24,8 +24,9 @@ class DolarJsonapi {
   request ({ config, noCache, noRequestCache }) {
     const cacheRequest = config.method === 'get' && !noRequestCache
 
+    let requestTimestamp
     if (cacheRequest && !noCache) {
-      this.cache.initRequest(config)
+      requestTimestamp = this.cache.initRequest(config)
     }
 
     return this.client.request(config).then(response => {
@@ -40,7 +41,7 @@ class DolarJsonapi {
       }
       if (!noCache) {
         parsed.persist()
-        if (cacheRequest) this.cache.writeRequestData(config, parsed.getData, raw)
+        if (cacheRequest) this.cache.writeRequestData(config, parsed.getData, raw, requestTimestamp)
       }
       return {
         raw,

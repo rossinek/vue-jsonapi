@@ -28,20 +28,29 @@ class Cache {
 
   initRequest (config) {
     const requestId = this.getRequestId(config)
+    const request = this.state.requests[requestId]
+    const timestamp = +new Date()
+    if (request) {
+      this.state.requests[requestId] = Object.freeze({ ...request, timestamp })
+    }
     reactiveEnsurePath(this.state.requests, [requestId], Object.freeze({
       requestId,
+      timestamp,
       data: () => null,
     }))
+    return timestamp
   }
 
-  writeRequestData (config, dataGetter, raw) {
+  writeRequestData (config, dataGetter, raw, timestamp) {
     const requestId = this.getRequestId(config)
-    this.state.requests[requestId] = Object.freeze({
-      ...this.state.requests[requestId],
-      timestamp: +new Date(),
-      data: dataGetter,
-      raw,
-    })
+    const request = this.state.requests[requestId]
+    if (request.timestamp === timestamp) {
+      this.state.requests[requestId] = Object.freeze({
+        ...request,
+        data: dataGetter,
+        raw,
+      })
+    }
     return this.state.requests[requestId]
   }
 
