@@ -19,8 +19,6 @@ export const normalize = (ctx, record) => {
         enumerable: true,
         configurable: true,
       })
-    } else {
-      model[relation] = null
     }
   })
   return model
