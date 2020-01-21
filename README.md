@@ -7,12 +7,12 @@ Many patterns and usage may seem familiar to you, as this solution is strongly i
 ## Installation
 
 1. Install package:
-    ```
+    ```sh
     npm install --save vue-jsonapi
     ```
     or:
 
-    ```
+    ```sh
     yarn add vue-jsonapi
     ```
 

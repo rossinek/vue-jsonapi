@@ -13,6 +13,8 @@
     "prepublishOnly": "yarn test && yarn build",
     "dev": "nodemon --exec 'yarn build:es && yarn build:umd' --watch src --watch build",
     "dev:examples": "cd examples && yarn dev",
+    "docs:dev": "cd docs && yarn dev",
+    "docs:build": "cd docs && yarn build",
     "test": "yarn build && yarn test:lint && yarn test:unit && yarn test:e2e",
     "test:e2e": "cd tests && yarn e2e",
     "test:unit": "cd tests && yarn unit",

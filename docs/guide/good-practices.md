@@ -1,0 +1,3 @@
+# Good practices
+
+Documentation will be available soon...

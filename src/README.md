@@ -20,7 +20,7 @@ export default {
 
 ## `$jsonapi`
 
-All the components have an `$jsonapi` helper available. See `DolarJsonapi` class for details.
+All the components have an `$jsonapi` helper available. See `DollarJsonapi` class for details.
 
 # Fetching data
 

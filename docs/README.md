@@ -11,7 +11,7 @@ features:
 - title: Auto updates
   details: Resources are shared and reused so any record changes are propagated to all places where given record is used.
 
-footer: MIT Licensed | Copyright © 2018-present Artur Rosa
+footer: MIT Licensed | Copyright © 2019-present Artur Rosa
 ---
 
 ### Setup
