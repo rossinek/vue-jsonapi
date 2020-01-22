@@ -15,6 +15,7 @@
     "dev:examples": "cd examples && yarn dev",
     "docs:dev": "cd docs && yarn dev",
     "docs:build": "cd docs && yarn build",
+    "docs:deploy": "cd docs && yarn deploy",
     "test": "yarn build && yarn test:lint && yarn test:unit && yarn test:e2e",
     "test:e2e": "cd tests && yarn e2e",
     "test:unit": "cd tests && yarn unit",

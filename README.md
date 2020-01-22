@@ -1,27 +1,45 @@
-# Vue integration with JSON:API
+<p align="center">
+  <a href="https://rossinek.github.io/vue-jsonapi/" target="_blank">
+    <img width="300" src="https://github.com/rossinek/vue-jsonapi/raw/documentation/docs/.vuepress/public/logo.png" alt="logo">
+  </a>
+</p>
 
-Many patterns and usage may seem familiar to you, as this solution is strongly inspired by `vue-apollo`.
+<p align="center">
+  <a href="https://www.npmjs.com/package/vue-jsonapi"><img src="https://img.shields.io/npm/v/vue-jsonapi.svg" alt="Version"></a>
+  <a href="https://github.com/rossinek/vue-jsonapi/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/vue-jsonapi.svg" alt="License"></a>
+</p>
 
-**[Documentation](./src/README.md)**
 
-## Installation
+# Vue JSON:API
 
-1. Install package:
-    ```sh
-    npm install --save vue-jsonapi
-    ```
-    or:
+Vue JSON:API is meant to be a painless integration with well formatted APIs. It is designed to facilitate work with api, help maintain a clean, consistent and readable code base, and speed up development. Some features will be helpful in providing a good experience for users.
 
-    ```sh
-    yarn add vue-jsonapi
-    ```
+Many patterns and usage may seem familiar to you, as this solution is strongly inspired by [VueApollo](https://github.com/vuejs/vue-apollo).
 
-2. Install the plugin into Vue:
-    ```js
-    import Vue from 'vue'
-    import Jsonapi from 'vue-jsonapi'
+## Documentation
 
-    const client = axios.create()
+Docs are available at https://rossinek.github.io/vue-jsonapi/
 
-    Vue.use(Jsonapi, { client })
-    ```
+## Features
+
+### Data normalization
+
+Instead of accessing raw JSON:API responses you will use simple normalized data objects.
+
+See [Normalized Data](https://rossinek.github.io/vue-jsonapi/guide/normalization.html) chapter.
+
+### Declarative data fetching
+
+Declare in component what resources you need and don't worry about all the things related to the call.
+
+### Auto updates
+
+Resources are shared and reused so any record changes are propagated to all places where given record is used. You can forget about updating the UI or refetching the queries.
+
+### Fetch policies
+
+Make use of already fetched data using fetch policies. Easily specify how you want your component to interact with the cache.
+
+### And much more...
+
+While reading this Guide and API Reference, you will certainly discover many other interesting features of this integration. Have fun!
