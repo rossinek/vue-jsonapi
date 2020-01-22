@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://rossinek.github.io/vue-jsonapi/" target="_blank">
-    <img width="300" src="https://github.com/rossinek/vue-jsonapi/raw/documentation/docs/.vuepress/public/logo.png" alt="logo">
+    <img width="300" src="https://github.com/rossinek/vue-jsonapi/raw/master/docs/.vuepress/public/logo.png" alt="logo">
   </a>
 </p>
 
