@@ -19,6 +19,9 @@ jobs:
           ## this enables colors in the output
           TERM: xterm
 
+    branches:
+      ignore:
+        - gh-pages
     working_directory: ~/repo
 
     steps:
