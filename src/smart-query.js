@@ -13,7 +13,7 @@ export const STATUS_SUCCESS = 'success'
 export const STATUS_ERROR = 'error'
 
 const defaultOptions = {
-  config: () => { throw Error('No action specified!') },
+  config: () => { throw Error('No config specified!') },
   fetchPolicy: POLICY_NETWORK_ONLY,
 }
 
@@ -38,7 +38,11 @@ class SmartQuery {
   }
 
   get loading () {
-    return this.info.status === STATUS_PENDING
+    return this.status === STATUS_PENDING
+  }
+
+  get status () {
+    return this.observable.info.status
   }
 
   get info () {
@@ -153,8 +157,7 @@ class SmartQuery {
       .catch(error => {
         info.status = STATUS_ERROR
         if (this.rawOptions.error) {
-          this.rawOptions.error.call(this.vm, error)
-          return null
+          return this.rawOptions.error.call(this.vm, error)
         }
         throw error
       })

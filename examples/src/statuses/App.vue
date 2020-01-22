@@ -11,7 +11,7 @@
       :data-spec="query"
     >
       Query "{{ query }}" status:
-      <span data-spec="status">{{ $jsonapi.queries[query].info.status }}</span>
+      <span data-spec="status">{{ $jsonapi.queries[query].status }}</span>
       <span
         v-if="$jsonapi.queries[query].loading"
         data-spec="loading"

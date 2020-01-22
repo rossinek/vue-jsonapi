@@ -1,8 +1,8 @@
-import DolarJsonapi from './dolar-jsonapi'
+import DollarJsonapi from './dollar-jsonapi'
 import { Globals } from './params'
 import DefaultCache from './cache'
 
-const plugin = DolarJsonapi
+const plugin = DollarJsonapi
 
 function install (Vue, { Cache = DefaultCache, client }) {
   if (install.installed) return
@@ -19,7 +19,7 @@ function install (Vue, { Cache = DefaultCache, client }) {
   Object.defineProperty(Vue.prototype, '$jsonapi', {
     get () {
       if (!this.$_jsonapi) {
-        this.$_jsonapi = new DolarJsonapi()
+        this.$_jsonapi = new DollarJsonapi()
       }
       return this.$_jsonapi
     },
