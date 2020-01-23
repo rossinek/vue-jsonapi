@@ -8,7 +8,7 @@ cd .vuepress/dist
 
 git init
 git add -A
-git commit -m 'deploy'
+git commit -m '[ci skip] deploy'
 git push -f git@github.com:rossinek/vue-jsonapi.git master:gh-pages
 
 cd -
