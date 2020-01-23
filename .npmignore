@@ -1,6 +1,7 @@
 src/
 examples/
 tests/
+docs/
 .circleci/
 .babel.config.js
 .eslintrc.js
