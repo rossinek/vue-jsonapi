@@ -45,8 +45,8 @@ app.get('/projects', (req, res) => {
           next: null,
         },
         included: [
-          include.includes('tasks') && db.projects2Tasks,
-          include.includes('tags') && db.projects2Tags,
+          ...(include.includes('tasks') ? db.projectsTasks : []),
+          ...(include.includes('tags') ? db.projectsTags : []),
         ].filter(Boolean),
       })
       break
