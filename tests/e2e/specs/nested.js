@@ -17,7 +17,7 @@ describe('nested', () => {
 
   it('eventually shows list of tags and tasks', () => {
     cy.visit('/nested')
-    cy.get('[data-spec="tag"]').should('have.length', 3)
+    cy.get('[data-spec="tag"]').should('have.length', 4)
     cy.get('[data-spec="task"]').should('have.length', 4)
   })
 

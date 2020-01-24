@@ -59,16 +59,16 @@ const projects2 = [
 ]
 
 const tasks = [
-  { id: '1', name: 'task #1' },
-  { id: '2', name: 'task #2' },
-  { id: '3', name: 'task #3' },
-  { id: '4', name: 'task #4' },
-  { id: '5', name: 'task #5' },
-  { id: '6', name: 'task #6' },
-  { id: '7', name: 'task #7' },
-  { id: '8', name: 'task #8' },
-  { id: '8', name: 'task #9' },
-  { id: '10', name: 'task #10' },
+  { id: '1', name: 'task #1', relationships: { tags: { data: [{ type: 'tag', id: '3' }] } } },
+  { id: '2', name: 'task #2', relationships: { tags: { data: [] } } },
+  { id: '3', name: 'task #3', relationships: { tags: { data: [] } } },
+  { id: '4', name: 'task #4', relationships: { tags: { data: [] } } },
+  { id: '5', name: 'task #5', relationships: { tags: { data: [] } } },
+  { id: '6', name: 'task #6', relationships: { tags: { data: [] } } },
+  { id: '7', name: 'task #7', relationships: { tags: { data: [] } } },
+  { id: '8', name: 'task #8', relationships: { tags: { data: [] } } },
+  { id: '8', name: 'task #9', relationships: { tags: { data: [{ type: 'tag', id: '1' }] } } },
+  { id: '10', name: 'task #10', relationships: { tags: { data: [] } } },
 ]
 
 const tags = [
@@ -77,9 +77,18 @@ const tags = [
   { id: '3', name: 'programming' },
 ]
 
+const getProjectsTasks = ps => ps
+  .reduce((acc, p) => acc.concat((p.relationships.tasks && p.relationships.tasks.data) || []), [])
+  .map(({ id }) => tasks.find(t => t.id === id))
+  .map(data => createRecord('task', data))
+
 module.exports = {
   projects: projects.map(data => createRecord('project', data)),
+  projectsTasks: getProjectsTasks(projects),
+  projectsTags: tags.map(data => createRecord('tag', data)),
   projects2: projects2.map(data => createRecord('project', data)),
+  projects2Tasks: getProjectsTasks(projects2),
+  projects2Tags: tags.map(data => createRecord('tag', data)),
   tags: tags.map(data => createRecord('tag', data)),
   tasks: tasks.map(data => createRecord('task', data)),
   tasksUpdated: tasks.map(data => createRecord('task', { ...data, name: `${data.name} – UPDATED` })),

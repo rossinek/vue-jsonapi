@@ -7,7 +7,7 @@
         data-spec="project"
       >
         {{ project.name }}
-        <ul class="project__tags">
+        <ul class="tags-list">
           <li
             v-for="(tag, index) in (project.tags || [])"
             :key="tag ? tag.id : index"
@@ -41,6 +41,28 @@
               class="task task--placeholder"
               data-spec="task-placeholder"
             />
+
+            <ul
+              v-if="task"
+              class="tags-list"
+            >
+              <li
+                v-for="(tag) in (task.tags || [])"
+                :key="tag.id"
+              >
+                <span
+                  v-if="tag"
+                  class="tag"
+                  data-spec="tag"
+                  v-text="tag.name"
+                />
+                <span
+                  v-else
+                  class="tag tag--placeholder"
+                  data-spec="tag-placeholder"
+                />
+              </li>
+            </ul>
           </li>
         </ul>
       </li>
@@ -60,7 +82,7 @@ export default {
 </script>
 
 <style scoped>
-.project__tags {
+.tags-list {
   display: inline-flex;
   list-style-type: none;
   margin: 0;

@@ -7,6 +7,7 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/vue-jsonapi"><img src="https://img.shields.io/npm/v/vue-jsonapi.svg" alt="Version"></a>
   <a href="https://github.com/rossinek/vue-jsonapi/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/vue-jsonapi.svg" alt="License"></a>
+  <img src="https://img.shields.io/badge/gluten-free-brightgreen" alt="Gluten free">
 </p>
 
 
