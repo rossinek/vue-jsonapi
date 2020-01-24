@@ -11,7 +11,10 @@
         fetch more
       </button>
     </p>
-    <p v-if="projects.length">
+    <form
+      v-if="projects.length"
+      @submit.prevent="renameTaskTag"
+    >
       <input
         v-model="newName"
         data-spec="tag-name-input"
@@ -20,11 +23,12 @@
       <button
         data-spec="patch-tag-button"
         :disabled="newName.length < 2"
+        type="submit"
         @click="renameTaskTag"
       >
         rename task tag
       </button>
-    </p>
+    </form>
   </div>
 </template>
 
