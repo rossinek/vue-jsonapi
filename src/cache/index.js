@@ -1,6 +1,12 @@
 import { Globals } from '../params'
-import { assignPropertyDescriptors, asTruthyArray, reactiveEnsurePath } from '../utils'
-import { normalize } from './normalize'
+import { assignPropertyDescriptors, asTruthyArray, reactiveEnsurePath, mapOrCall } from '../utils'
+import { normalize, identification } from './normalize'
+import NormalizedDataProxy from './normalized-data-proxy'
+
+const getUniqueCallId = (() => {
+  let callId = 0
+  return () => callId++
+})()
 
 const defaultConfig = {
   getRequestId: ({ method, url }) => `${method}:${url}`,
@@ -29,55 +35,78 @@ class Cache {
   initRequest (config) {
     const requestId = this.getRequestId(config)
     const request = this.state.requests[requestId]
-    const timestamp = +new Date()
+    const callId = getUniqueCallId()
     if (request) {
-      this.state.requests[requestId] = Object.freeze({ ...request, timestamp })
+      this.state.requests[requestId] = Object.freeze({ ...request, callId })
     }
     reactiveEnsurePath(this.state.requests, [requestId], Object.freeze({
+      callId,
       requestId,
-      timestamp,
-      data: () => null,
+      identification: undefined,
     }))
-    return timestamp
+    return callId
   }
 
-  writeRequestData (config, dataGetter, raw, timestamp) {
+  initNextPageRequest (requestId) {
+    const request = this.state.requests[requestId]
+    const callId = getUniqueCallId()
+    if (request) {
+      this.state.requests[requestId] = Object.freeze({ ...request, callId })
+    }
+    return callId
+  }
+
+  writeRequestResponse (config, callId, identification, raw) {
     const requestId = this.getRequestId(config)
     const request = this.state.requests[requestId]
-    if (request.timestamp === timestamp) {
+    if (request.callId === callId) {
       this.state.requests[requestId] = Object.freeze({
         ...request,
-        data: dataGetter,
+        identification,
         raw,
       })
     }
     return this.state.requests[requestId]
   }
 
-  appendRequestData (requestId, dataGetter, raw) {
-    const prevDataGetter = this.state.requests[requestId].data
-    this.state.requests[requestId] = Object.freeze({
-      ...this.state.requests[requestId],
-      timestamp: +new Date(),
-      raw,
-      data: () => [
-        ...prevDataGetter(),
-        ...dataGetter(),
-      ],
-    })
+  writeNextPageRequestResponse (requestId, callId, identification, raw) {
+    const prevIdentification = this.state.requests[requestId].identification || []
+    const request = this.state.requests[requestId]
+    if (request && request.callId === callId) {
+      this.state.requests[requestId] = Object.freeze({
+        ...request,
+        identification: prevIdentification.concat(identification),
+        raw,
+      })
+    }
     return this.state.requests[requestId]
+  }
+
+  writeRequestData (config, data) {
+    const requestId = this.getRequestId(config)
+    const request = this.state.requests[requestId]
+    if (request) {
+      this.state.requests[requestId] = Object.freeze({
+        ...request,
+        identification: identification(data),
+      })
+    }
+    return request
   }
 
   readRequest (requestId) {
     const request = this.state.requests[requestId]
+    const theCache = this
     return request && {
       ...request,
-      get data () { return request.data() },
+      get data () {
+        return theCache.read(request.identification)
+      },
     }
   }
 
-  read (record) {
-    return this.state.records[this.getRecordId(record)]
+  read (data) {
+    return mapOrCall(data, record => record && this.state.records[this.getRecordId(record)])
   }
 
   write (record, data) {
@@ -96,51 +125,29 @@ class Cache {
       const dataFromRequest = ['post', 'patch'].includes(config.method) && response.status === 204
       const data = dataFromRequest ? config.data : response.data.data
       const included = response.data.included
-      const records = this.collectRecords(data)
+      const recordsSet = this.collectRecords(data)
       const includedRecords = asTruthyArray(data).concat(included || [])
       const includedRecordsIds = includedRecords.map(this.getRecordId)
 
-      const mutations = Array.from(records)
+      const mutations = Object.keys(recordsSet)
         .map(recordId => ctx => reactiveEnsurePath(ctx.state.records, [recordId], null))
         .concat(includedRecordsIds.map(recordId => ctx => reactiveEnsurePath(ctx.state.records, [recordId], {})))
         .concat(includedRecords.map(rec => ctx => ctx.write(rec, normalize(ctx, rec))))
 
-      let getter = null
-
-      const createGetter = (ctx) => () => Array.isArray(data) ? data.map(ctx.read.bind(ctx)) : ctx.read(data)
-
-      return {
-        persist: () => {
-          mutations.forEach(commit => commit(this))
-          getter = createGetter(this)
-        },
-        getData: () => {
-          if (getter) return getter()
-          const state = { records: [] }
-          const read = record => state.records[this.getRecordId(record)]
-          const write = (record, data) => { state.records[this.getRecordId(record)] = data }
-          const temporaryContext = { state, read, write }
-          mutations.forEach(commit => commit(temporaryContext))
-          getter = createGetter(temporaryContext)
-          return getter()
-        },
-      }
+      return new NormalizedDataProxy(this, { data, mutations })
     }
-    return {
-      persist: () => {},
-      getData: () => response,
-    }
+    return new NormalizedDataProxy(this)
   }
 
-  collectRecords (data, records = new Set()) {
+  collectRecords (data, recordsSet = {}) {
     if (data) {
-      asTruthyArray(data).map(this.getRecordId).forEach(id => records.add(id))
+      asTruthyArray(data).map(this.getRecordId).forEach(id => recordsSet[id] = true)
       asTruthyArray(data).forEach(record => {
         const relationships = record.relationships || {}
-        Object.keys(relationships).forEach(rel => this.collectRecords(relationships[rel].data, records))
+        Object.keys(relationships).forEach(rel => this.collectRecords(relationships[rel].data, recordsSet))
       })
     }
-    return records
+    return recordsSet
   }
 }
 

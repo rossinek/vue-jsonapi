@@ -1,4 +1,4 @@
-import { omit } from '../utils'
+import { mapOrCall, omit, pick } from '../utils'
 
 export const normalize = (ctx, record) => {
   const model = {
@@ -25,6 +25,9 @@ export const normalize = (ctx, record) => {
 }
 
 export const metadata = (resource) => {
-  if (Array.isArray(resource)) return resource.map(r => omit(r, ['attributes']))
-  return omit(resource, ['attributes'])
+  return resource && mapOrCall(resource, r => omit(r, ['attributes']))
+}
+
+export const identification = (resource) => {
+  return resource && mapOrCall(resource, r => pick(r, ['id', 'type']))
 }

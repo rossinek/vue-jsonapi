@@ -2,6 +2,8 @@ import { Globals } from './params'
 
 export const asTruthyArray = (obj) => (Array.isArray(obj) ? obj : [obj]).filter(Boolean)
 
+export const mapOrCall = (obj, func) => Array.isArray(obj) ? obj.map(func) : func(obj)
+
 export const pick = (input = {}, keys = []) => keys.reduce((output, key) => {
   output[key] = input[key]
   return output

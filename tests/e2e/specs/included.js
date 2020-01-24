@@ -27,5 +27,10 @@ describe('included', () => {
 
     cy.get('[data-spec="tag"]:contains(programming)').should('have.length', 0)
     cy.get('[data-spec="tag"]:contains(completely new tag)').should('have.length', 2)
+
+    cy.get('[data-spec="fetch-more-button"]').click()
+
+    cy.get('[data-spec="tag"]:contains(programming)').should('have.length', 3)
+    cy.get('[data-spec="tag"]:contains(completely new tag)').should('have.length', 0)
   })
 })

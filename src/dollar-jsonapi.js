@@ -24,13 +24,13 @@ class DollarJsonapi {
   request ({ config, noCache, noRequestCache }) {
     const cacheRequest = config.method === 'get' && !noRequestCache
 
-    let requestTimestamp
+    let requestCallId
     if (cacheRequest && !noCache) {
-      requestTimestamp = this.cache.initRequest(config)
+      requestCallId = this.cache.initRequest(config)
     }
 
     return this.client.request(config).then(response => {
-      const parsed = this.cache.parseResponse(config, response)
+      const dataProxy = this.cache.parseResponse(config, response)
       const raw = {
         ...response,
         data: {
@@ -40,13 +40,14 @@ class DollarJsonapi {
         },
       }
       if (!noCache) {
-        parsed.persist()
-        if (cacheRequest) this.cache.writeRequestData(config, parsed.getData, raw, requestTimestamp)
+        dataProxy.persist()
+        if (cacheRequest) this.cache.writeRequestResponse(config, requestCallId, dataProxy.identification, raw)
       }
       return {
+        _dataProxy: dataProxy,
         raw,
         get data () {
-          return parsed.getData()
+          return this._dataProxy.getData()
         },
       }
     })
@@ -54,6 +55,7 @@ class DollarJsonapi {
 
   async fetchMore (prevResponse) {
     if (prevResponse.raw.data.links && prevResponse.raw.data.links.next) {
+      const requestCallId = this.cache.initNextPageRequest(prevResponse.requestId)
       const response = await this.request({
         config: {
           method: 'get',
@@ -61,7 +63,7 @@ class DollarJsonapi {
         },
         noRequestCache: true,
       })
-      this.cache.appendRequestData(prevResponse.requestId, () => response.data, response.raw)
+      this.cache.writeNextPageRequestResponse(prevResponse.requestId, requestCallId, response._dataProxy.identification, response.raw)
       return response
     }
   }

@@ -1,7 +1,5 @@
-import Vue from 'vue'
-
 export const Globals = {
-  Vue: Vue,
+  Vue: undefined,
   defaultCache: undefined,
   defaultClient: undefined,
 }
