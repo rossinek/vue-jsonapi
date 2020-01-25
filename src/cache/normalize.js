@@ -31,3 +31,7 @@ export const metadata = (resource) => {
 export const identification = (resource) => {
   return resource && mapOrCall(resource, r => pick(r, ['id', 'type']))
 }
+
+export const reverseIdentification = (normalizedResource) => {
+  return normalizedResource && mapOrCall(normalizedResource, r => ({ id: r.id, type: r.__type }))
+}

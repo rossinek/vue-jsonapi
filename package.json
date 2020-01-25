@@ -21,7 +21,7 @@
     "test:unit": "cd tests && yarn unit",
     "test:lint": "eslint --ext .js,.vue '{src,build}/**/*.js' 'examples/**/*.{js,vue}'"
   },
-  "author": "Artur Rosa <rossinek@gmail.com> (arturrosa.pl)",
+  "author": "Artur Rosa <rossinek@gmail.com> (https://arturrosa.pl)",
   "license": "MIT",
   "keywords": [
     "vue",

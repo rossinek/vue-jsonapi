@@ -1,6 +1,6 @@
 import { Globals } from '../params'
 import { assignPropertyDescriptors, asTruthyArray, reactiveEnsurePath, mapOrCall } from '../utils'
-import { normalize, identification } from './normalize'
+import { normalize, reverseIdentification } from './normalize'
 import NormalizedDataProxy from './normalized-data-proxy'
 
 const getUniqueCallId = (() => {
@@ -88,10 +88,16 @@ class Cache {
     if (request) {
       this.state.requests[requestId] = Object.freeze({
         ...request,
-        identification: identification(data),
+        identification: reverseIdentification(data),
       })
     }
     return request
+  }
+
+  readRequestData (config) {
+    const requestId = this.getRequestId(config)
+    const request = this.state.requests[requestId]
+    return request && this.read(request.identification)
   }
 
   readRequest (requestId) {
