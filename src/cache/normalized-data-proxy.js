@@ -4,7 +4,7 @@ import { mapOrCall } from '../utils'
 class NormalizedDataProxy {
   constructor (cache, { data, mutations } = {}) {
     this._cache = cache
-    this._mutations = mutations
+    this._mutations = mutations || []
     this._identification = identification(data)
     this._context = null
     this._persisted = false
