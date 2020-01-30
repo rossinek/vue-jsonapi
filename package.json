@@ -1,6 +1,6 @@
 {
   "name": "vue-jsonapi",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Painless Vue.js - JSON:API integration",
   "main": "dist/vue-jsonapi.umd.js",
   "module": "dist/vue-jsonapi.esm.js",
