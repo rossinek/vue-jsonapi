@@ -21,7 +21,7 @@ class NormalizedDataProxy {
     if (!this._context) {
       const state = { records: [] }
       const read = record => state.records[this._cache.getRecordId(record)]
-      const write = (record, data) => { state.records[this.getRecordId(record)] = data }
+      const write = (record, data) => { state.records[this._cache.getRecordId(record)] = data }
       this._context = { state, read, write }
       this._mutations.forEach(commit => commit(this._context))
     }
