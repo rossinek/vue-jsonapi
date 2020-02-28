@@ -1,4 +1,4 @@
-import { mapOrCall, omit, pick } from '../utils'
+import { mapOrCall, omit, pick, isGetter, assignPropertyDescriptor } from '../utils'
 
 export const normalize = (ctx, record) => {
   const model = {
@@ -9,17 +9,20 @@ export const normalize = (ctx, record) => {
   const relationships = record.relationships || {}
   Object.keys(relationships).forEach(relation => {
     if (Object.hasOwnProperty.call(relationships[relation], 'data')) {
-      const data = relationships[relation].data
-      Object.defineProperty(model, relation, {
-        get () {
-          if (Array.isArray(data)) return data.map(item => ctx.read(item))
-          else if (data) return ctx.read(data)
-          return null
-        },
-        enumerable: true,
-        configurable: true,
-      })
+      assignRelationship(ctx, model, relation, relationships[relation].data)
     }
+  })
+  return model
+}
+
+const assignRelationship = (ctx, model, key, data) => {
+  assignPropertyDescriptor(model, key, {
+    get () {
+      if (data) return mapOrCall(data, d => ctx.read(d))
+      return null
+    },
+    enumerable: true,
+    configurable: true,
   })
   return model
 }
@@ -34,4 +37,26 @@ export const identification = (resource) => {
 
 export const reverseIdentification = (normalizedResource) => {
   return normalizedResource && mapOrCall(normalizedResource, r => ({ id: r.id, type: r.__type }))
+}
+
+const isResource = data => !!(data && data.__type)
+
+const isResourceCollection = data => Array.isArray(data) && data.some(isResource)
+
+export const normalizeRelationships = (ctx, normalizedResource, ignoreRelated) => {
+  const prev = ctx.read(normalizedResource)
+
+  return Object.keys(normalizedResource).reduce((model, key) => {
+    const value = normalizedResource[key]
+    const isEmptyRelation = () => isGetter(prev, key) && (value === null || (Array.isArray(value) && !value.length))
+    if (value !== undefined && (isResourceCollection(value) || isResource(value) || isEmptyRelation())) {
+      if (!ignoreRelated) {
+        mapOrCall(value, r => r && ctx.write(r))
+      }
+      assignRelationship(ctx, model, key, value)
+    } else {
+      assignPropertyDescriptor(model, key, Object.getOwnPropertyDescriptor(normalizedResource, key))
+    }
+    return model
+  }, {})
 }

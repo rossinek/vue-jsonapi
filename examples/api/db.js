@@ -34,6 +34,9 @@ const projects = [
     id: '3',
     name: 'Third project',
     relationships: {
+      tags: {
+        data: [],
+      },
       tasks: {
         data: [
           { type: 'task', id: '3' },

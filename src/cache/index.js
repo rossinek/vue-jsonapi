@@ -1,6 +1,6 @@
 import { Globals } from '../params'
 import { assignPropertyDescriptors, asTruthyArray, reactiveEnsurePath, mapOrCall } from '../utils'
-import { normalize, reverseIdentification } from './normalize'
+import { normalize, normalizeRelationships, reverseIdentification } from './normalize'
 import NormalizedDataProxy from './normalized-data-proxy'
 
 const getUniqueCallId = (() => {
@@ -10,7 +10,7 @@ const getUniqueCallId = (() => {
 
 const defaultConfig = {
   getRequestId: ({ method, url }) => `${method}:${url}`,
-  getRecordId: ({ type, id }) => `${type}:${id}`,
+  getRecordId: ({ __type, type, id }) => `${__type || type}:${id}`,
 }
 
 class Cache {
@@ -115,10 +115,11 @@ class Cache {
     return mapOrCall(data, record => record && this.state.records[this.getRecordId(record)])
   }
 
-  write (record, data) {
+  write (record, ignoreRelated) {
     const recordId = this.getRecordId(record)
     reactiveEnsurePath(this.state.records, [recordId], null)
-    const extendedNormalizedRec = assignPropertyDescriptors({}, this.state.records[recordId], data)
+    const normalizedRecord = normalizeRelationships(this, record, ignoreRelated)
+    const extendedNormalizedRec = assignPropertyDescriptors({}, this.state.records[recordId], normalizedRecord)
     this.state.records[recordId] = Object.freeze(extendedNormalizedRec)
   }
 
@@ -138,7 +139,7 @@ class Cache {
       const mutations = Object.keys(recordsSet)
         .map(recordId => ctx => reactiveEnsurePath(ctx.state.records, [recordId], null))
         .concat(includedRecordsIds.map(recordId => ctx => reactiveEnsurePath(ctx.state.records, [recordId], {})))
-        .concat(includedRecords.map(rec => ctx => ctx.write(rec, normalize(ctx, rec))))
+        .concat(includedRecords.map(rec => ctx => ctx.write(normalize(ctx, rec), true)))
 
       return new NormalizedDataProxy(this, { data, mutations })
     }
