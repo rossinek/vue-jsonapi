@@ -4188,7 +4188,7 @@ verror@1.10.0:
     extsprintf "^1.2.0"
 
 "vue-jsonapi@link:..":
-  version "0.1.9"
+  version "0.1.10"
 
 vue@^2.6.10:
   version "2.6.10"
