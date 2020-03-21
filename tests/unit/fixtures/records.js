@@ -26,6 +26,7 @@ export const RECORD_WITH_RELATIONSHIPS = {
         id: 'SINGLE_ID',
         type: 'SINGLE_TYPE',
       },
+      meta: { META_SINGLE: 'META_SINGLE' },
     },
     RECORD_WITH_RELATIONSHIPS_REL_MULTIPLE: {
       data: [{
@@ -35,6 +36,7 @@ export const RECORD_WITH_RELATIONSHIPS = {
         id: 'ITEM_2_ID',
         type: 'ITEM_2_TYPE',
       }],
+      meta: { META_MULTIPLE: 'META_MULTIPLE' },
     },
   },
 }
@@ -80,9 +82,11 @@ export const RECORD_WITH_RELATIONSHIPS_UPDATED = {
         id: 'SINGLE_ID',
         type: 'SINGLE_TYPE',
       },
+      meta: { META_NULL: 'META_NULL' },
     },
     RECORD_WITH_RELATIONSHIPS_REL_SINGLE: {
       data: null,
+      meta: { META_SINGLE_UPDATED: 'META_SINGLE_UPDATED' },
     },
   },
 }

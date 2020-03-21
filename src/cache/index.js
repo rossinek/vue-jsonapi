@@ -1,6 +1,6 @@
 import { Globals } from '../params'
 import { assignPropertyDescriptors, asTruthyArray, reactiveEnsurePath, mapOrCall } from '../utils'
-import { normalize, normalizeRelationships, reverseIdentification } from './normalize'
+import { assignMetaDescriptor, mergedMeta, normalize, normalizeRelationships, reverseIdentification } from './normalize'
 import NormalizedDataProxy from './normalized-data-proxy'
 
 const getUniqueCallId = (() => {
@@ -118,8 +118,10 @@ class Cache {
   write (record, ignoreRelated) {
     const recordId = this.getRecordId(record)
     reactiveEnsurePath(this.state.records, [recordId], null)
+    const cachedRecord = this.state.records[recordId]
     const normalizedRecord = normalizeRelationships(this, record, ignoreRelated)
-    const extendedNormalizedRec = assignPropertyDescriptors({}, this.state.records[recordId], normalizedRecord)
+    const base = assignMetaDescriptor({}, mergedMeta(cachedRecord, record))
+    const extendedNormalizedRec = assignPropertyDescriptors(base, cachedRecord, normalizedRecord)
     this.state.records[recordId] = Object.freeze(extendedNormalizedRec)
   }
 

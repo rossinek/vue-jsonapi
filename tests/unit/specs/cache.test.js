@@ -33,6 +33,29 @@ describe('Cache', () => {
     expect(cache.getRequestId(SIMPLE_REQUEST)).toBe('test')
   })
 
+  describe('#collectRecords', () => {
+    it('collects item itself and all relations in a set', () => {
+      const cache = new Cache()
+      expect(cache.collectRecords(RECORD_WITH_RELATIONSHIPS)).toMatchObject({
+        'RECORD_WITH_RELATIONSHIPS_TYPE:RECORD_WITH_RELATIONSHIPS_ID': true,
+        'SINGLE_TYPE:SINGLE_ID': true,
+        'ITEM_1_TYPE:ITEM_1_ID': true,
+        'ITEM_2_TYPE:ITEM_2_ID': true,
+      })
+    })
+
+    it('collects extends provided set', () => {
+      const cache = new Cache()
+      expect(cache.collectRecords(RECORD_WITH_RELATIONSHIPS, { test: true })).toMatchObject({
+        test: true,
+        'RECORD_WITH_RELATIONSHIPS_TYPE:RECORD_WITH_RELATIONSHIPS_ID': true,
+        'SINGLE_TYPE:SINGLE_ID': true,
+        'ITEM_1_TYPE:ITEM_1_ID': true,
+        'ITEM_2_TYPE:ITEM_2_ID': true,
+      })
+    })
+  })
+
   describe('reading and writing', () => {
     describe('when cache is empty', () => {
       let cache
@@ -62,6 +85,10 @@ describe('Cache', () => {
           RECORD_WITH_RELATIONSHIPS_REL_SINGLE: undefined,
           RECORD_WITH_RELATIONSHIPS_REL_MULTIPLE: [undefined, undefined],
         })
+        expect(cache.read(RECORD_WITH_RELATIONSHIPS).__meta).toMatchObject({
+          RECORD_WITH_RELATIONSHIPS_REL_SINGLE: { META_SINGLE: 'META_SINGLE' },
+          RECORD_WITH_RELATIONSHIPS_REL_MULTIPLE: { META_MULTIPLE: 'META_MULTIPLE' },
+        })
       })
 
       it('relationships are updated after loaded', () => {
@@ -82,6 +109,10 @@ describe('Cache', () => {
       it('shows cached relationships for record with relationships', () => {
         cache.write(normalize(cache, RECORD_WITH_RELATIONSHIPS))
         expect(cache.read(RECORD_WITH_RELATIONSHIPS)).toMatchObject(RECORD_WITH_RELATIONSHIPS_NORMALIZED)
+        expect(cache.read(RECORD_WITH_RELATIONSHIPS).__meta).toMatchObject({
+          RECORD_WITH_RELATIONSHIPS_REL_SINGLE: { META_SINGLE: 'META_SINGLE' },
+          RECORD_WITH_RELATIONSHIPS_REL_MULTIPLE: { META_MULTIPLE: 'META_MULTIPLE' },
+        })
       })
     })
 
@@ -97,6 +128,11 @@ describe('Cache', () => {
       it('it overwrites attributes and relationships properly', () => {
         cache.write(normalize(cache, RECORD_WITH_RELATIONSHIPS_UPDATED))
         expect(cache.read(RECORD_WITH_RELATIONSHIPS_UPDATED)).toMatchObject(RECORD_WITH_RELATIONSHIPS_UPDATED_NORMALIZED)
+        expect(cache.read(RECORD_WITH_RELATIONSHIPS_UPDATED).__meta).toMatchObject({
+          RECORD_WITH_RELATIONSHIPS_REL_NULL: { META_NULL: 'META_NULL' },
+          RECORD_WITH_RELATIONSHIPS_REL_SINGLE: { META_SINGLE_UPDATED: 'META_SINGLE_UPDATED' },
+          RECORD_WITH_RELATIONSHIPS_REL_MULTIPLE: { META_MULTIPLE: 'META_MULTIPLE' },
+        })
       })
     })
 

@@ -56,5 +56,12 @@ describe('#normalize', () => {
         expect(output.RECORD_WITH_RELATIONSHIPS_REL_MULTIPLE).toEqual(['UPDATED_ITEM_1_ID', 'UPDATED_ITEM_2_ID'])
       })
     })
+
+    describe('when relations have meta', () => {
+      it('hidden meta field contains relations meta', () => {
+        expect(output.__meta.RECORD_WITH_RELATIONSHIPS_REL_SINGLE).toMatchObject({ META_SINGLE: 'META_SINGLE' })
+        expect(output.__meta.RECORD_WITH_RELATIONSHIPS_REL_MULTIPLE).toMatchObject({ META_MULTIPLE: 'META_MULTIPLE' })
+      })
+    })
   })
 })

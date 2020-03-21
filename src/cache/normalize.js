@@ -6,17 +6,19 @@ export const normalize = (ctx, record) => {
     id: record.id,
     ...record.attributes,
   }
+  assignMetaDescriptor(model)
   const relationships = record.relationships || {}
   Object.keys(relationships).forEach(relation => {
     if (Object.hasOwnProperty.call(relationships[relation], 'data')) {
       assignRelationship(ctx, model, relation, relationships[relation].data)
+      assignRelationshipMeta(ctx, model, relation, relationships[relation].meta)
     }
   })
   return model
 }
 
-const assignRelationship = (ctx, model, key, data) => {
-  assignPropertyDescriptor(model, key, {
+const assignRelationship = (ctx, model, relationKey, data) => {
+  assignPropertyDescriptor(model, relationKey, {
     get () {
       if (data) return mapOrCall(data, d => ctx.read(d))
       return null
@@ -24,6 +26,16 @@ const assignRelationship = (ctx, model, key, data) => {
     enumerable: true,
     configurable: true,
   })
+  return model
+}
+
+const assignRelationshipMeta = (ctx, model, relationKey, meta) => {
+  if (meta && model.__meta) {
+    model.__meta[relationKey] = {
+      ...(model.__meta[relationKey] || {}),
+      ...meta,
+    }
+  }
   return model
 }
 
@@ -59,4 +71,20 @@ export const normalizeRelationships = (ctx, normalizedResource, ignoreRelated) =
     }
     return model
   }, {})
+}
+
+export const mergedMeta = (target, source) => {
+  return {
+    ...((target && target.__meta) || {}),
+    ...((source && source.__meta) || {}),
+  }
+}
+
+export const assignMetaDescriptor = (model = {}, value = {}) => {
+  assignPropertyDescriptor(model, '__meta', {
+    value,
+    enumerable: false,
+    configurable: false,
+  })
+  return model
 }
