@@ -1,4 +1,4 @@
-import { Globals } from './params'
+import { reactive, watch } from 'vue'
 import { isEqual, pick } from './utils'
 
 export const POLICY_NETWORK_ONLY = 'network-only'
@@ -25,7 +25,7 @@ class SmartQuery {
     this.watchers = []
     this.interval = null
 
-    this.observable = Globals.Vue.observable({
+    this.observable = reactive({
       info: {},
     })
 
@@ -38,7 +38,7 @@ class SmartQuery {
   }
 
   get loading () {
-    return this.status === STATUS_PENDING
+    return this.observable.info.status === STATUS_PENDING
   }
 
   get status () {
@@ -56,13 +56,13 @@ class SmartQuery {
   set data (data) {
     if (data) {
       const updated = this.rawOptions.update ? this.rawOptions.update.call(this.vm, data, this.request) : data
-      if (!Object.prototype.hasOwnProperty.call(this.vm, this.name)) {
+      if (!Object.prototype.hasOwnProperty.call(this.vm.$data, this.name)) {
         if (process.env.NODE_ENV !== 'production') {
           console.warn('Default value for jsonapi query is not specified in component\'s `data` object.')
         }
         return
       }
-      this.vm.$set(this.vm, this.name, updated)
+      this.vm[this.name] = updated
     }
   }
 
@@ -80,8 +80,8 @@ class SmartQuery {
 
   init () {
     this.watchers.push(
-      this.vm.$watch(this.computeOptions.bind(this), this.onComputeOptionsChange.bind(this)),
-      this.vm.$watch(this.readCachedRequest.bind(this), this.onRequestDataChange.bind(this), { deep: true }),
+      watch(this.computeOptions.bind(this), this.onComputeOptionsChange.bind(this)),
+      watch(this.readCachedRequest.bind(this), this.onRequestDataChange.bind(this), { deep: true }),
     )
     if (this.pollInterval) {
       this.interval = setInterval(this.refetch.bind(this), this.pollInterval)
@@ -121,10 +121,10 @@ class SmartQuery {
   }
 
   createRequestInfo (config) {
-    return {
+    return reactive({
       requestId: this.$jsonapi.cache.getRequestId(config),
       status: STATUS_IDLE,
-    }
+    })
   }
 
   readCachedRequest () {

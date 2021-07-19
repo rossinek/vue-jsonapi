@@ -16,9 +16,12 @@
     "express": "^4.17.1",
     "express-urlrewrite": "^1.2.0",
     "nodemon": "^2.0.1",
-    "poi": "^12.7.5",
-    "vue": "^2.6.10",
-    "vue-jsonapi": "link:..",
-    "vue-template-compiler": "^2.6.10"
+    "poi": "^12.10.3",
+    "vue": "^3",
+    "vue-jsonapi": "link:.."
+  },
+  "devDependencies": {
+    "@vue/compiler-sfc": "^3.1.5",
+    "vue-loader": "^16.3.1"
   }
 }

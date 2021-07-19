@@ -74,6 +74,10 @@ export default {
         method: 'get',
         url: `/tasks/1?delay=${FAKE_DELAY}`,
       },
+      update (data) {
+        console.log('here')
+        return data
+      },
     },
   },
   methods: {

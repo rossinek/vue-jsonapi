@@ -4,19 +4,18 @@ import DefaultCache from './cache'
 
 const plugin = DollarJsonapi
 
-function install (Vue, { Cache = DefaultCache, client }) {
+function install (app, { Cache = DefaultCache, client }) {
   if (install.installed) return
   install.installed = true
 
-  Globals.Vue = Vue
   Globals.defaultCache = new Cache()
   Globals.defaultClient = client
 
   // Options merging
-  Vue.config.optionMergeStrategies.jsonapi = Vue.config.optionMergeStrategies.computed
+  app.config.optionMergeStrategies.jsonapi = (to, from) => ({ ...(from || {}), ...(to || {}) })
 
   // Lazy creation
-  Object.defineProperty(Vue.prototype, '$jsonapi', {
+  Object.defineProperty(app.config.globalProperties, '$jsonapi', {
     get () {
       if (!this.$_jsonapi) {
         this.$_jsonapi = new DollarJsonapi()
@@ -25,7 +24,7 @@ function install (Vue, { Cache = DefaultCache, client }) {
     },
   })
 
-  Vue.mixin({
+  app.mixin({
     created () {
       const queries = this.$options.jsonapi
       if (queries) {
@@ -35,7 +34,7 @@ function install (Vue, { Cache = DefaultCache, client }) {
         })
       }
     },
-    beforeDestroy () {
+    beforeUnmount () {
       if (this.$_jsonapi) {
         this.$_jsonapi.destroy()
       }

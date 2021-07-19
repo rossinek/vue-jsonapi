@@ -1,4 +1,4 @@
-import { Globals } from '../params'
+import { reactive } from 'vue'
 import { assignPropertyDescriptors, asTruthyArray, reactiveEnsurePath, mapOrCall } from '../utils'
 import { assignMetaDescriptor, mergedMeta, normalize, normalizeRelationships, reverseIdentification } from './normalize'
 import NormalizedDataProxy from './normalized-data-proxy'
@@ -18,7 +18,7 @@ class Cache {
     this.options = { ...defaultConfig, ...config }
     this.actionIndex = 0
 
-    this.state = Globals.Vue.observable({
+    this.state = reactive({
       records: {},
       requests: {},
     })

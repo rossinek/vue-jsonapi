@@ -1,5 +1,3 @@
-import { Globals } from './params'
-
 export const asTruthyArray = (obj) => (Array.isArray(obj) ? obj : [obj]).filter(Boolean)
 
 export const mapOrCall = (obj, func) => Array.isArray(obj) ? obj.map(func) : func(obj)
@@ -40,7 +38,7 @@ export const assignPropertyDescriptors = (target, ...sources) => {
 export const reactiveEnsurePath = (target, path, empty = {}) => {
   path.reduce((current, prop, index) => {
     if (!current[prop]) {
-      Globals.Vue.set(current, prop, index < path.length - 1 ? {} : empty)
+      current[prop] = index < path.length - 1 ? {} : empty
     }
     return current[prop]
   }, target)
@@ -49,7 +47,7 @@ export const reactiveEnsurePath = (target, path, empty = {}) => {
 export const reactiveAssign = (target, ...sources) => {
   sources.forEach(source => {
     Object.keys(source).forEach(prop => {
-      Globals.Vue.set(target, prop, source[prop])
+      target[prop] = source[prop]
     })
   })
 }
